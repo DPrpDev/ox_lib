@@ -3,7 +3,6 @@
 ---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field iconColor? string;
 ---@field style? string | table;
----@field alignIcon? 'top' | 'center';
 
 local isOpen = false
 local currentText
@@ -35,7 +34,7 @@ function lib.hideTextUI()
     currentText = nil
 end
 
----@return boolean, string | nil
+---@return boolean
 function lib.isTextUIOpen()
-    return isOpen, currentText
+    return isOpen
 end

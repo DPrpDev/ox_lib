@@ -11,7 +11,6 @@
 ---@field style? { [string]: any }
 ---@field icon? string | {[1]: IconProp, [2]: string};
 ---@field iconColor? string;
----@field alignIcon? 'top' | 'center';
 
 ---`client`
 ---@param data NotifyProps
