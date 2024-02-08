@@ -70,7 +70,7 @@ const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
     flexWrap: 'nowrap',
     display: 'flex',
     flexDirection: 'initial',
-    justifyContent: 'left',
+    justifyContent: 'center',
     direction: 'rtl',
     
   },
