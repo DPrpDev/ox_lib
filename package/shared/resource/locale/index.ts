@@ -1,21 +1,9 @@
 import { cache } from '../cache/index';
 import { printf } from 'fast-printf';
 
-const dict: Record<string, string> = {};
+const dict: { [key: string]: string | number } = {};
 
-function flattenDict(source: Record<string, any>, target: Record<string, string>, prefix?: string) {
-  for (const key in source) {
-    const fullKey = prefix ? `${prefix}.${key}` : key;
-    const value = source[key];
-
-    if (typeof value === 'object') flattenDict(value, target, fullKey);
-    else target[fullKey] = String(value);
-  }
-
-  return target;
-}
-
-export const locale = (str: string, ...args: any[]) => {
+export const locale = (str: keyof typeof dict, ...args: any[]) => {
   const lstr = dict[str];
 
   if (!lstr) return str;
@@ -33,28 +21,15 @@ export const locale = (str: string, ...args: any[]) => {
 
 export const getLocales = () => dict;
 
-export function getLocale(resource: string, key: string) {
-  let locale = dict[key];
-
-  if (locale) console.warn(`overwritin existing locale '${key} (${locale})`);
-
-  locale = exports[resource].getLocale(key);
-  dict[key] = locale;
-
-  if (!locale) console.warn(`no locale exists with key '${key} in resource '${resource}`);
-
-  return locale;
-}
-
 export const initLocale = () => {
   const lang = GetConvar('ox:locale', 'en');
-  let locales: typeof dict = JSON.parse(LoadResourceFile(cache.resource, `locales/${lang}.json`));
+  let locales: unknown = JSON.parse(LoadResourceFile(cache.resource, `locales/${lang}.json`));
 
   if (!locales) {
     console.warn(`could not load 'locales/${lang}.json'`);
 
     if (lang !== 'en') {
-      locales = JSON.parse(LoadResourceFile(cache.resource, 'locales/en.json'));
+      locales = LoadResourceFile(cache.resource, 'locales/en.json');
 
       if (!locales) {
         console.warn(`could not load 'locales/en.json'`);
@@ -64,9 +39,7 @@ export const initLocale = () => {
     if (!locales) return;
   }
 
-  const flattened = flattenDict(locales, {});
-
-  for (let [k, v] of Object.entries(flattened)) {
+  for (let [k, v] of Object.entries(locales)) {
     if (typeof v === 'string') {
       const regExp = new RegExp(/\$\{([^}]+)\}/g);
 
@@ -76,7 +49,7 @@ export const initLocale = () => {
         for (const match of matches) {
           if (!match) break;
           const variable = match.substring(2, match.length - 1) as keyof typeof locales;
-          let locale: string = flattened[variable];
+          let locale: string = locales[variable];
 
           if (locale) {
             v = v.replace(match, locale);
@@ -88,5 +61,3 @@ export const initLocale = () => {
     dict[k] = v;
   }
 };
-
-initLocale();

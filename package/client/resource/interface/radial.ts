@@ -1,4 +1,4 @@
-import type { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
+import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
 type RadialItem = {
   id: string;

@@ -1,5 +1,5 @@
-import type { Sx } from '@mantine/core';
-import type { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
+import { Sx } from '@mantine/core';
+import { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
 type NotificationPosition =
   | 'top'
@@ -11,7 +11,6 @@ type NotificationPosition =
   | 'center-right'
   | 'center-left';
 type NotificationType = 'inform' | 'error' | 'success';
-type IconAnimation = 'spin' | 'spinPulse' | 'spinReverse' | 'pulse' | 'beat' | 'fade' | 'beatFade' | 'bounce' | 'shake';
 
 interface NotifyProps {
   id?: string | number;
@@ -23,8 +22,6 @@ interface NotifyProps {
   style?: Sx;
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
-  iconAnimation?: IconAnimation;
-  alignIcon?: 'top' | 'center';
 }
 
 export const notify = (data: NotifyProps): void => exports.ox_lib.notify(data);
