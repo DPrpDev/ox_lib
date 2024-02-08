@@ -1,5 +1,4 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { IconAnimation } from '../components/LibIcon';
 
 export type MenuPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
@@ -13,7 +12,6 @@ export interface MenuItem {
   description?: string;
   icon?: IconProp | string;
   iconColor?: string;
-  iconAnimation?: IconAnimation;
   defaultIndex?: number;
   close?: boolean;
 }

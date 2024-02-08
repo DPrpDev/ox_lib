@@ -1,11 +1,11 @@
 import { Box, createStyles } from '@mantine/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { fetchNui } from '../../../utils/fetchNui';
 import ScaleFade from '../../../transitions/ScaleFade';
 import type { RadialMenuItem } from '../../../typings';
 import { useLocales } from '../../../providers/LocaleProvider';
-import LibIcon from '../../../components/LibIcon';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -15,8 +15,8 @@ const useStyles = createStyles((theme) => ({
     transform: 'translate(-50%, -50%)',
   },
   sector: {
-    fill: theme.colors.dark[6],
-    color: theme.colors.dark[0],
+    fill: theme.colors.violet[3],
+    color: theme.colors.dark[9],
 
     '&:hover': {
       fill: theme.fn.primaryColor(),
@@ -25,7 +25,7 @@ const useStyles = createStyles((theme) => ({
       },
     },
     '> g > text': {
-      fill: theme.colors.dark[0],
+      fill: theme.colors.dark[9],
     },
   },
   backgroundCircle: {
@@ -81,23 +81,18 @@ const RadialMenu: React.FC = () => {
 
   useEffect(() => {
     if (menu.items.length <= PAGE_ITEMS) return setMenuItems(menu.items);
-    const items = menu.items.slice(
-      PAGE_ITEMS * (menu.page - 1) - (menu.page - 1),
-      PAGE_ITEMS * menu.page - menu.page + 1
-    );
+    const items = menu.items.slice(PAGE_ITEMS * (menu.page - 1) - (menu.page - 1), PAGE_ITEMS * menu.page - menu.page + 1);
     if (PAGE_ITEMS * menu.page - menu.page + 1 < menu.items.length) {
       items[items.length - 1] = { icon: 'ellipsis-h', label: locale.ui.more, isMore: true };
     }
     setMenuItems(items);
   }, [menu.items, menu.page]);
 
-  useNuiEvent('openRadialMenu', async (data: { items: RadialMenuItem[]; sub?: boolean; option?: string } | false) => {
+  useNuiEvent('openRadialMenu', async (data: { items: RadialMenuItem[]; sub?: boolean, option?: string } | false) => {
     if (!data) return setVisible(false);
     let initialPage = 1;
     if (data.option) {
-      data.items.findIndex(
-        (item, index) => item.menu == data.option && (initialPage = Math.floor(index / PAGE_ITEMS) + 1)
-      );
+      data.items.findIndex((item, index) => item.menu == data.option && (initialPage = Math.floor(index / PAGE_ITEMS) + 1));
     }
     setMenu({ ...data, page: initialPage });
     setVisible(true);
@@ -139,8 +134,7 @@ const RadialMenu: React.FC = () => {
                     transform={`rotate(-${index * pieAngle} 175 175) translate(${sinAngle * gap}, ${cosAngle * gap})`}
                     className={classes.sector}
                     onClick={async () => {
-                      const clickIndex =
-                        menu.page === 1 ? index : PAGE_ITEMS * (menu.page - 1) - (menu.page - 1) + index;
+                      const clickIndex = menu.page === 1 ? index : PAGE_ITEMS * (menu.page - 1) - (menu.page - 1) + index;
                       if (!item.isMore) fetchNui('radialClick', clickIndex);
                       else {
                         await changePage(true);
@@ -153,21 +147,19 @@ const RadialMenu: React.FC = () => {
                       }, ${175 + (175 - gap) * Math.sin(-degToRad(pieAngle))} z`}
                     />
                     <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
-                      <LibIcon x={iconX - 12.5} y={iconY - 17.5} icon={item.icon} width={25} height={25} fixedWidth />
-                      <text
-                        x={iconX}
-                        y={iconY + (item.label.includes('  \n') ? 7 : 25)}
-                        fill="#fff"
-                        textAnchor="middle"
-                        pointerEvents="none"
-                      >
-                        {item.label.includes('  \n')
-                          ? item.label.split('  \n').map((value) => (
-                              <tspan x={iconX} dy="1.2em">
-                                {value}
-                              </tspan>
-                            ))
-                          : item.label}
+                      <FontAwesomeIcon
+                        x={iconX - 12.5}
+                        y={iconY - 17.5}
+                        icon={item.icon}
+                        width={25}
+                        height={25}
+                        fixedWidth
+                      />
+                      <text x={iconX} y={iconY + (item.label.includes("  \n") ? 7 : 25)} fill="#fff" textAnchor="middle" pointerEvents="none">
+                        {item.label.includes("  \n")
+                          ? item.label.split("  \n").map((value) => <tspan x={iconX} dy="1.2em">{value}</tspan>)
+                          : item.label
+                        }
                       </text>
                     </g>
                   </g>
@@ -191,7 +183,7 @@ const RadialMenu: React.FC = () => {
             </g>
           </svg>
           <div className={classes.centerIconContainer}>
-            <LibIcon
+            <FontAwesomeIcon
               icon={!menu.sub && menu.page < 2 ? 'xmark' : 'arrow-rotate-left'}
               fixedWidth
               className={classes.centerIcon}

@@ -1,9 +1,8 @@
-import { Button, Group, Modal, Stack } from '@mantine/core';
+import { Group, Modal, Button, Stack } from '@mantine/core';
 import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
 import { fetchNui } from '../../utils/fetchNui';
-import type { InputProps } from '../../typings';
 import { OptionValue } from '../../typings';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
@@ -15,7 +14,7 @@ import ColorField from './components/fields/color';
 import DateField from './components/fields/date';
 import TextareaField from './components/fields/textarea';
 import TimeField from './components/fields/time';
-import dayjs from 'dayjs';
+import type { InputProps } from '../../typings';
 
 export type FormValues = {
   test: {
@@ -66,28 +65,21 @@ const InputDialog: React.FC = () => {
     });
   });
 
-  useNuiEvent('closeInputDialog', async () => await handleClose(true));
+  useNuiEvent('closeInputDialog', () => {
+    setVisible(false);
+  });
 
-  const handleClose = async (dontPost?: boolean) => {
+  const handleClose = async () => {
     setVisible(false);
     await new Promise((resolve) => setTimeout(resolve, 200));
     form.reset();
     fieldForm.remove();
-    if (dontPost) return;
     fetchNui('inputData');
   };
 
   const onSubmit = form.handleSubmit(async (data) => {
     setVisible(false);
     const values: any[] = [];
-    for (let i = 0; i < fields.rows.length; i++) {
-      const row = fields.rows[i];
-
-      if ((row.type === 'date' || row.type === 'date-range') && row.returnString) {
-        if (!data.test[i]) continue;
-        data.test[i].value = dayjs(data.test[i].value).format(row.format || 'DD/MM/YYYY');
-      }
-    }
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
     await new Promise((resolve) => setTimeout(resolve, 200));
     form.reset();
@@ -155,7 +147,7 @@ const InputDialog: React.FC = () => {
               <Button
                 uppercase
                 variant="default"
-                onClick={() => handleClose()}
+                onClick={handleClose}
                 mr={3}
                 disabled={fields.options?.allowCancel === false}
               >

@@ -1,5 +1,5 @@
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
-import { Box, createStyles, Flex, Stack, Text } from '@mantine/core';
+import { Box, Stack, Text, Flex, createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { ContextMenuProps } from '../../../typings';
 import ContextButton from './components/ContextButton';
@@ -7,7 +7,6 @@ import { fetchNui } from '../../../utils/fetchNui';
 import ReactMarkdown from 'react-markdown';
 import HeaderButton from './components/HeaderButton';
 import ScaleFade from '../../../transitions/ScaleFade';
-import MarkdownComponents from '../../../config/MarkdownComponents';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: true });
@@ -20,6 +19,7 @@ const useStyles = createStyles((theme) => ({
     right: '25%',
     width: 320,
     height: 580,
+    borderRadius: 100,
   },
   header: {
     justifyContent: 'center',
@@ -28,14 +28,16 @@ const useStyles = createStyles((theme) => ({
     gap: 6,
   },
   titleContainer: {
-    borderRadius: 4,
+    borderRadius: 100,
     flex: '1 85%',
-    backgroundColor: theme.colors.dark[6],
+    backgroundColor: theme.colors.violet[3],
   },
   titleText: {
-    color: theme.colors.dark[0],
+    color: theme.colors.dark[9],
     padding: 6,
     textAlign: 'center',
+    fontVariant: 'small-caps',
+    fontStyle: 'bold',
   },
   buttonsContainer: {
     height: 560,
@@ -93,7 +95,7 @@ const ContextMenu: React.FC = () => {
           )}
           <Box className={classes.titleContainer}>
             <Text className={classes.titleText}>
-              <ReactMarkdown components={MarkdownComponents}>{contextMenu.title}</ReactMarkdown>
+              <ReactMarkdown>{contextMenu.title}</ReactMarkdown>
             </Text>
           </Box>
           <HeaderButton icon="xmark" canClose={contextMenu.canClose} iconSize={18} handleClick={closeContext} />

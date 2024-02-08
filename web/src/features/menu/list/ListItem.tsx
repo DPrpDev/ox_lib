@@ -1,10 +1,11 @@
-import { Box, createStyles, Group, Progress, Stack, Text } from '@mantine/core';
+import { Box, Group, Stack, Text, Progress, Image } from '@mantine/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import type { MenuItem } from '../../../typings';
+import { createStyles } from '@mantine/core';
 import { isIconUrl } from '../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import LibIcon from '../../../components/LibIcon';
 
 interface Props {
   item: MenuItem;
@@ -15,13 +16,13 @@ interface Props {
 
 const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
   buttonContainer: {
-    backgroundColor: theme.colors.dark[6],
+    backgroundColor: theme.colors.violet[3],
     borderRadius: theme.radius.md,
     padding: 2,
     height: 60,
     scrollMargin: 8,
     '&:focus': {
-      backgroundColor: theme.colors.dark[4],
+      backgroundColor: theme.colors.violet[3],
       outline: 'none',
     },
   },
@@ -41,20 +42,20 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
   },
   icon: {
     fontSize: 24,
-    color: params.iconColor || theme.colors.dark[2],
+    color: params.iconColor || theme.colors.violet[3],
   },
   label: {
-    color: theme.colors.dark[2],
+    color: theme.colors.dark[9],
     textTransform: 'uppercase',
     fontSize: 12,
     verticalAlign: 'middle',
   },
   chevronIcon: {
     fontSize: 14,
-    color: theme.colors.dark[2],
+    color: theme.colors.dark[9],
   },
   scrollIndexValue: {
-    color: theme.colors.dark[2],
+    color: theme.colors.dark[9],
     textTransform: 'uppercase',
     fontSize: 14,
   },
@@ -88,12 +89,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
             {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
               <img src={item.icon} alt="Missing image" className={classes.iconImage} />
             ) : (
-              <LibIcon
-                icon={item.icon as IconProp}
-                className={classes.icon}
-                fixedWidth
-                animation={item.iconAnimation}
-              />
+              <FontAwesomeIcon icon={item.icon as IconProp} className={classes.icon} fixedWidth />
             )}
           </Box>
         )}
@@ -109,11 +105,11 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
               </Text>
             </Stack>
             <Group spacing={1} position="center">
-              <LibIcon icon="chevron-left" className={classes.chevronIcon} />
+              <FontAwesomeIcon icon="chevron-left" className={classes.chevronIcon} />
               <Text className={classes.scrollIndexValue}>
                 {scrollIndex + 1}/{item.values.length}
               </Text>
-              <LibIcon icon="chevron-right" className={classes.chevronIcon} />
+              <FontAwesomeIcon icon="chevron-right" className={classes.chevronIcon} />
             </Group>
           </Group>
         ) : item.checked !== undefined ? (

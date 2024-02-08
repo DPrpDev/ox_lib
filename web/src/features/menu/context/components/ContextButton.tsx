@@ -1,11 +1,10 @@
-import { Button, createStyles, Group, HoverCard, Image, Progress, Stack, Text } from '@mantine/core';
+import { Button, Box, Group, Stack, Text, Progress, HoverCard, Image, createStyles } from '@mantine/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ReactMarkdown from 'react-markdown';
-import { ContextMenuProps, Option } from '../../../../typings';
+import { Option, ContextMenuProps } from '../../../../typings';
 import { fetchNui } from '../../../../utils/fetchNui';
 import { isIconUrl } from '../../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import MarkdownComponents from '../../../../config/MarkdownComponents';
-import LibIcon from '../../../../components/LibIcon';
 
 const openMenu = (id: string | undefined) => {
   fetchNui<ContextMenuProps>('openContext', { id: id, back: false });
@@ -15,38 +14,49 @@ const clickContext = (id: string) => {
   fetchNui('clickContext', id);
 };
 
-const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: boolean }) => ({
+const useStyles = createStyles((theme, params: { disabled?: boolean }) => ({
   inner: {
-    justifyContent: 'flex-start',
+    borderRadius: 100,
   },
   label: {
+    padding: 6,
+    color: params.disabled ? theme.colors.dark[9] : theme.colors.dark[9],
+    backgroundColor: theme.colors.violet[3],
+    fontSize: 12,
+    fontVariant: 'small-caps',
+    fontStyle: 'bold',
+    borderRadius: 90,
     width: '100%',
-    color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[0],
-    whiteSpace: 'pre-wrap',
+    '&:hover': {
+      backgroundColor: theme.colors.violet[2],
+    }
   },
   button: {
-    height: 'fit-content',
+    height: '100%',
     width: '100%',
-    padding: 10,
+    padding: 5,
+    borderRadius: 100,
+    backgroundColor: theme.colors.violet[3],
     '&:hover': {
-      backgroundColor: params.readOnly ? theme.colors.dark[6] : undefined,
-      cursor: params.readOnly ? 'unset' : 'pointer',
-    },
-    '&:active': {
-      transform: params.readOnly ? 'unset' : undefined,
-    },
+      backgroundColor: theme.colors.violet[2],
+    }
   },
   iconImage: {
     maxWidth: '25px',
   },
   description: {
-    color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2],
-    fontSize: 12,
+    color: params.disabled ? theme.colors.dark[9] : theme.colors.dark[9],
+    fontSize: 11,
+    fontVariant: 'small-caps',
+    textAlign: 'center',
+    width: '100%',
   },
   dropdown: {
     padding: 10,
-    color: theme.colors.dark[0],
-    fontSize: 14,
+    backgroundColor: theme.colors.violet[3],
+    opacity: 0,
+    color: theme.colors.dark[9],
+    fontSize: 12,
     maxWidth: 256,
     width: 'fit-content',
     border: 'none',
@@ -56,23 +66,24 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
     flex: '1',
   },
   buttonGroup: {
-    gap: 4,
+    gap: 3,
     flexWrap: 'nowrap',
+    display: 'flex',
+    flexDirection: 'initial',
+    justifyContent: 'left',
+    direction: 'rtl',
+    
   },
   buttonIconContainer: {
-    width: 25,
-    height: 25,
     justifyContent: 'center',
-    alignItems: 'center',
+    
   },
   buttonTitleText: {
     overflowWrap: 'break-word',
+    
   },
   buttonArrowContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 25,
-    height: 25,
+    overflowWrap: 'break-word',
   },
 }));
 
@@ -81,7 +92,7 @@ const ContextButton: React.FC<{
 }> = ({ option }) => {
   const button = option[1];
   const buttonKey = option[0];
-  const { classes } = useStyles({ disabled: button.disabled, readOnly: button.readOnly });
+  const { classes } = useStyles({ disabled: button.disabled });
 
   return (
     <>
@@ -92,44 +103,36 @@ const ContextButton: React.FC<{
       >
         <HoverCard.Target>
           <Button
-            classNames={{ inner: classes.inner, label: classes.label, root: classes.button }}
-            onClick={() =>
-              !button.disabled && !button.readOnly
-                ? button.menu
-                  ? openMenu(button.menu)
-                  : clickContext(buttonKey)
-                : null
-            }
+            classNames={{ inner: classes.inner, label: classes.label }}
+            onClick={() => (!button.disabled ? (button.menu ? openMenu(button.menu) : clickContext(buttonKey)) : null)}
             variant="default"
+            className={classes.button}
             disabled={button.disabled}
           >
             <Group position="apart" w="100%" noWrap>
               <Stack className={classes.buttonStack}>
-                {(button.title || Number.isNaN(+buttonKey)) && (
-                  <Group className={classes.buttonGroup}>
-                    {button?.icon && (
-                      <Stack className={classes.buttonIconContainer}>
-                        {typeof button.icon === 'string' && isIconUrl(button.icon) ? (
-                          <img src={button.icon} className={classes.iconImage} alt="Missing img" />
-                        ) : (
-                          <LibIcon
-                            icon={button.icon as IconProp}
-                            fixedWidth
-                            size="lg"
-                            style={{ color: button.iconColor }}
-                            animation={button.iconAnimation}
-                          />
-                        )}
-                      </Stack>
-                    )}
-                    <Text className={classes.buttonTitleText}>
-                      <ReactMarkdown components={MarkdownComponents}>{button.title || buttonKey}</ReactMarkdown>
-                    </Text>
-                  </Group>
-                )}
+                <Group className={classes.buttonGroup}>
+                  {button?.icon && (
+                    <Stack className={classes.buttonIconContainer}>
+                      {typeof button.icon === 'string' && isIconUrl(button.icon) ? (
+                        <img src={button.icon} className={classes.iconImage} alt="Missing img" />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={button.icon as IconProp}
+                          fixedWidth
+                          size="lg"
+                          style={{ color: button.iconColor }}
+                        />
+                      )}
+                    </Stack>
+                  )}
+                  <Text className={classes.buttonTitleText}>
+                    <ReactMarkdown>{button.title || buttonKey}</ReactMarkdown>
+                  </Text>
+                </Group>
                 {button.description && (
                   <Text className={classes.description}>
-                    <ReactMarkdown components={MarkdownComponents}>{button.description}</ReactMarkdown>
+                    <ReactMarkdown>{button.description}</ReactMarkdown>
                   </Text>
                 )}
                 {button.progress !== undefined && (
@@ -138,7 +141,7 @@ const ContextButton: React.FC<{
               </Stack>
               {(button.menu || button.arrow) && button.arrow !== false && (
                 <Stack className={classes.buttonArrowContainer}>
-                  <LibIcon icon="chevron-right" fixedWidth />
+                  <FontAwesomeIcon icon="chevron-right" fixedWidth />
                 </Stack>
               )}
             </Group>
@@ -148,21 +151,14 @@ const ContextButton: React.FC<{
           {button.image && <Image src={button.image} />}
           {Array.isArray(button.metadata) ? (
             button.metadata.map(
-              (
-                metadata: string | { label: string; value?: any; progress?: number; colorScheme?: string },
-                index: number
-              ) => (
+              (metadata: string | { label: string; value?: any; progress?: number }, index: number) => (
                 <>
                   <Text key={`context-metadata-${index}`}>
                     {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ''}`}
                   </Text>
 
                   {typeof metadata === 'object' && metadata.progress !== undefined && (
-                    <Progress
-                      value={metadata.progress}
-                      size="sm"
-                      color={metadata.colorScheme || button.colorScheme || 'dark.3'}
-                    />
+                    <Progress value={metadata.progress} size="sm" color={button.colorScheme || 'dark.3'} />
                   )}
                 </>
               )

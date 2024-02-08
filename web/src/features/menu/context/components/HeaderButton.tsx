@@ -1,6 +1,6 @@
 import { Button, createStyles } from '@mantine/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import LibIcon from '../../../../components/LibIcon';
 
 interface Props {
   icon: IconProp;
@@ -11,19 +11,24 @@ interface Props {
 
 const useStyles = createStyles((theme, params: { canClose?: boolean }) => ({
   button: {
-    borderRadius: 4,
+    borderRadius: 100,
     flex: '1 15%',
     alignSelf: 'stretch',
     height: 'auto',
-    textAlign: 'center',
     justifyContent: 'center',
     padding: 2,
+    backgroundColor: theme.colors.violet[3],
+    textAlign: 'center',
+    '&:hover': {
+      backgroundColor: theme.colors.violet[2],
+    }
   },
   root: {
     border: 'none',
   },
   label: {
-    color: params.canClose === false ? theme.colors.dark[2] : theme.colors.dark[0],
+    color: params.canClose === false ? theme.colors.dark[9] : theme.colors.dark[9],
+    textAlign: 'center',
   },
 }));
 
@@ -38,7 +43,7 @@ const HeaderButton: React.FC<Props> = ({ icon, canClose, iconSize, handleClick }
       disabled={canClose === false}
       onClick={handleClick}
     >
-      <LibIcon icon={icon} fontSize={iconSize} fixedWidth />
+      <FontAwesomeIcon icon={icon} fontSize={iconSize} fixedWidth />
     </Button>
   );
 };

@@ -1,17 +1,18 @@
 import { Box, createStyles, Stack, Tooltip } from '@mantine/core';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import ListItem from './ListItem';
 import Header from './Header';
 import FocusTrap from 'focus-trap-react';
 import { fetchNui } from '../../../utils/fetchNui';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 import type { MenuPosition, MenuSettings } from '../../../typings';
-import LibIcon from '../../../components/LibIcon';
 
 const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCount: number; selected: number }) => ({
   tooltip: {
-    backgroundColor: theme.colors.dark[6],
-    color: theme.colors.dark[2],
+    backgroundColor: theme.colors.violet[3],
+    color: theme.colors.dark[9],
     borderRadius: theme.radius.sm,
     maxWidth: 350,
     whiteSpace: 'normal',
@@ -27,19 +28,18 @@ const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCo
     left: params.position === 'bottom-left' ? 1 : undefined,
     bottom: params.position === 'bottom-left' || params.position === 'bottom-right' ? 1 : undefined,
     fontFamily: 'Roboto',
-    width: 384,
   },
   buttonsWrapper: {
     height: 'fit-content',
     maxHeight: 415,
     overflow: 'hidden',
     borderRadius: params.itemCount <= 6 || params.selected === params.itemCount - 1 ? theme.radius.md : undefined,
-    backgroundColor: theme.colors.dark[8],
+    backgroundColor: theme.colors.grape[3],
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
   },
   scrollArrow: {
-    backgroundColor: theme.colors.dark[8],
+    backgroundColor: theme.colors.grape[3],
     textAlign: 'center',
     borderBottomLeftRadius: theme.radius.md,
     borderBottomRightRadius: theme.radius.md,
@@ -53,7 +53,7 @@ const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCo
 
 const ListMenu: React.FC = () => {
   const [menu, setMenu] = useState<MenuSettings>({
-    position: 'top-left',
+    position: 'top-right',
     title: '',
     items: [],
   });
@@ -238,7 +238,7 @@ const ListMenu: React.FC = () => {
             </Box>
             {menu.items.length > 6 && selected !== menu.items.length - 1 && (
               <Box className={classes.scrollArrow}>
-                <LibIcon icon="chevron-down" className={classes.scrollArrowIcon} />
+                <FontAwesomeIcon icon="chevron-down" className={classes.scrollArrowIcon} />
               </Box>
             )}
           </Box>
